@@ -1,0 +1,209 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply antialiased text-gray-800;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display font-bold;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-6 py-3 rounded-xl shadow-md font-semibold transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary-600 hover:bg-primary-700 text-white focus:ring-primary-500;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-lg p-6 transition-transform duration-300 hover:shadow-xl;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+  }
+
+  /* Anglican styling */
+  .anglican-container {
+    @apply border-l-4 border-primary-600 pl-4;
+  }
+
+  .anglican-motto {
+    @apply text-amber-500 italic font-semibold;
+  }
+
+  /* Add fancy link underline animation */
+  .fancy-link {
+    @apply relative inline-block text-primary-600 font-medium;
+  }
+
+  .fancy-link::after {
+    content: "";
+    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 transition-all duration-300;
+  }
+
+  .fancy-link:hover::after {
+    @apply w-full;
+  }
+
+  /* Add subtle card hover effects */
+  .hover-card {
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+  }
+
+  /* Text gradient effect */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-amber-500;
+  }
+
+  /* Button with animated arrow */
+  .btn-arrow {
+    @apply inline-flex items-center relative pr-10 overflow-hidden group;
+  }
+
+  .btn-arrow .arrow {
+    @apply absolute right-4 transform transition-all duration-300 group-hover:translate-x-1;
+  }
+
+  /* Shimmer effect */
+  .shimmer {
+    @apply relative overflow-hidden;
+  }
+
+  .shimmer::after {
+    content: "";
+    @apply absolute top-0 left-0 h-full w-[200%] bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full;
+    animation: shimmer 2.5s infinite;
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}
+
+.color-card {
+  @apply relative rounded-2xl overflow-hidden transition-all duration-300 transform;
+  height: 240px;
+}
+
+.color-card:hover {
+  @apply shadow-2xl scale-105;
+}
+
+.color-card-content {
+  @apply absolute inset-0 flex flex-col justify-end p-6 bg-gradient-to-t from-black/70 to-transparent text-white;
+}
+
+/* Add to the end of the file */
+.backface-hidden {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+/* For Safari compatibility */
+@supports (-webkit-appearance: none) {
+  .backface-hidden {
+    transform: translateZ(0.1px);
+  }
+}
+
+/* Add smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Add custom scroll bar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1642d850;
+  border-radius: 6px;
+  border: 3px solid #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #1642d8;
+}
+
+/* Loading animations */
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(22, 66, 216, 0.2);
+  border-radius: 50%;
+  border-top-color: #1642d8;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Page transitions */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 400ms, transform 400ms;
+}
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Fade in animation on scroll */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Add font utilities */
+.font-playfair {
+  font-family: var(--font-playfair);
+}
+
+/* Update the grid pattern reference in your CSS if needed */
+.pattern-grid-light {
+  background-image: url("/patterns/grid-light.svg");
+  background-repeat: repeat;
+}
