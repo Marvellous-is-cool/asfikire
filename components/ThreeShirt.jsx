@@ -5,6 +5,7 @@ import { OrbitControls, Text, Center, Html } from "@react-three/drei";
 import * as THREE from "three";
 import { motion } from "framer-motion";
 import { useSettings } from "../contexts/SettingsContext";
+import dynamic from "next/dynamic";
 
 // Bible verses for the back of each shirt
 const BIBLE_VERSES = {
@@ -14,6 +15,34 @@ const BIBLE_VERSES = {
   black:
     '"Trust in the LORD with all your heart and lean not on your own understanding." - Proverbs 3:5',
 };
+
+// Error Boundary Component
+function ErrorFallback() {
+  return (
+    <div className="w-full h-full flex items-center justify-center bg-gray-100 rounded-xl p-4">
+      <div className="text-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-12 w-12 mx-auto mb-4 text-amber-500"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+          />
+        </svg>
+        <h3 className="text-lg font-medium mb-2">Couldn't load 3D view</h3>
+        <p className="text-gray-600 mb-4">
+          Please try our 2D shirt preview instead
+        </p>
+      </div>
+    </div>
+  );
+}
 
 // Loading fallback
 function ThreeLoader() {
@@ -192,6 +221,29 @@ function ShirtEnvironment() {
   );
 }
 
+// ErrorBoundary Component to catch and handle errors
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("ThreeJS error caught in boundary:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+    return this.props.children;
+  }
+}
+
 export default function ThreeShirt({
   onSelectColor,
   initialColor = "wine",
@@ -200,6 +252,7 @@ export default function ThreeShirt({
   const [color, setColor] = useState(initialColor || "wine");
   const [view, setView] = useState("front");
   const [rotating, setRotating] = useState(false);
+  const [error, setError] = useState(false);
   const { settings } = useSettings();
 
   const handleColorChange = (newColor) => {
@@ -232,22 +285,45 @@ export default function ThreeShirt({
 
       {/* 3D Shirt Canvas */}
       <div className="w-full max-w-md h-[400px] bg-gray-50 rounded-xl flex items-center justify-center mb-8 relative overflow-hidden">
-        <Canvas
-          shadows
-          camera={{ position: [0, 0, 3], fov: 45 }}
-          onCreated={({ gl }) => {
-            gl.setClearColor(new THREE.Color("#f9fafb"));
-          }}
-        >
-          <ShirtEnvironment />
-          <RealisticShirt color={color} view={view} setRotating={setRotating} />
-          <OrbitControls
-            enableZoom={false}
-            enablePan={false}
-            minPolarAngle={Math.PI / 3}
-            maxPolarAngle={Math.PI / 1.5}
-          />
-        </Canvas>
+        {error ? (
+          <ErrorFallback />
+        ) : (
+          <ErrorBoundary fallback={<ErrorFallback />}>
+            <Canvas
+              shadows
+              flat // Improves performance on mobile
+              dpr={[1, 2]} // Limit pixel ratio for better performance
+              camera={{ position: [0, 0, 3], fov: 45 }}
+              onCreated={({ gl }) => {
+                gl.setClearColor(new THREE.Color("#f9fafb"));
+                // Optimize rendering for mobile
+                gl.setPixelRatio(Math.min(2, window.devicePixelRatio));
+                gl.outputEncoding = THREE.sRGBEncoding;
+              }}
+              onError={(e) => {
+                console.error("Canvas rendering error:", e);
+                setError(true);
+              }}
+            >
+              <ShirtEnvironment />
+              <Suspense fallback={<ThreeLoader />}>
+                <RealisticShirt
+                  color={color}
+                  view={view}
+                  setRotating={setRotating}
+                />
+              </Suspense>
+              <OrbitControls
+                enableZoom={false}
+                enablePan={false}
+                enableDamping
+                dampingFactor={0.1}
+                minPolarAngle={Math.PI / 3}
+                maxPolarAngle={Math.PI / 1.5}
+              />
+            </Canvas>
+          </ErrorBoundary>
+        )}
       </div>
 
       {/* Color Selection */}

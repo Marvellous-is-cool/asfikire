@@ -61,35 +61,35 @@ export function ContactSection() {
     settings.contact;
 
   return (
-    <section id="contact" className="py-24 bg-white">
+    <section id="contact" className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4">
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-10 md:mb-16">
           <h2 className="uppercase text-primary-600 font-medium tracking-wider mb-2">
             Contact Us
           </h2>
-          <h3 className="text-4xl font-playfair font-bold text-gray-900 mb-6">
+          <h3 className="text-3xl md:text-4xl font-playfair font-bold text-gray-900 mb-4 md:mb-6">
             Get in Touch
           </h3>
-          <p className="text-lg text-gray-600">
+          <p className="text-base md:text-lg text-gray-600">
             Have questions about our fellowship or need more information? Reach
             out to us.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-10%" }}
             transition={{ duration: 0.5 }}
-            className="bg-gray-50 p-8 rounded-xl"
+            className="bg-gray-50 p-5 md:p-8 rounded-xl shadow-sm"
           >
-            <h4 className="text-2xl font-bold text-gray-900 mb-6">
+            <h4 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">
               Send Us a Message
             </h4>
 
             {submitted ? (
-              <div className="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-lg">
+              <div className="bg-green-50 border-l-4 border-green-500 p-4 md:p-6 rounded-r-lg">
                 <div className="flex items-center">
                   <div className="bg-green-100 rounded-full p-2">
                     <FaPaperPlane className="text-green-600" />
@@ -108,7 +108,7 @@ export function ContactSection() {
               <form className="space-y-4" onSubmit={handleSubmit}>
                 {error && (
                   <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg mb-4">
-                    <p className="text-red-700">{error}</p>
+                    <p className="text-red-700 text-sm">{error}</p>
                   </div>
                 )}
 
@@ -125,7 +125,7 @@ export function ContactSection() {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500"
                     placeholder="Your name"
                   />
                 </div>
@@ -142,7 +142,7 @@ export function ContactSection() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500"
                     placeholder="Your email"
                   />
                 </div>
@@ -159,17 +159,17 @@ export function ContactSection() {
                     value={formData.message}
                     onChange={handleChange}
                     rows="4"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500"
                     placeholder="Your message"
                   ></textarea>
                 </div>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
+                  className="w-full md:w-auto px-6 py-2 md:py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
                 >
                   {submitting ? (
-                    <span className="flex items-center">
+                    <span className="flex items-center justify-center">
                       <svg
                         className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
                         xmlns="http://www.w3.org/2000/svg"
@@ -203,51 +203,55 @@ export function ContactSection() {
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-10%" }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex flex-col justify-between"
           >
-            <div className="mb-8">
-              <h4 className="text-2xl font-bold text-gray-900 mb-6">
+            <div className="mb-6 md:mb-8">
+              <h4 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">
                 Our Weekly Programmes
               </h4>
 
-              {programSchedule.map((program, index) => (
-                <div
-                  key={index}
-                  className="bg-primary-50 border-l-4 border-primary-600 p-6 rounded-r-lg mb-4"
-                >
-                  <h5 className="font-bold text-gray-900 mb-1 flex items-center">
-                    <FaCalendarAlt className="text-primary-600 mr-2" />
-                    {program.name}
-                  </h5>
-                  <p className="text-gray-600 mb-1 flex items-center ml-6">
-                    <FaClock className="text-primary-500 mr-2" />
-                    {program.time}
-                  </p>
-                  <p className="text-gray-600 flex items-center ml-6">
-                    <FaMapPin className="text-primary-500 mr-2" />
-                    {program.location}
-                  </p>
-                </div>
-              ))}
+              <div className="space-y-3 md:space-y-4">
+                {programSchedule.map((program, index) => (
+                  <div
+                    key={index}
+                    className="bg-primary-50 border-l-4 border-primary-600 p-4 md:p-6 rounded-r-lg"
+                  >
+                    <h5 className="font-bold text-gray-900 mb-1 flex items-center text-sm md:text-base">
+                      <FaCalendarAlt className="text-primary-600 mr-2 flex-shrink-0" />
+                      <span className="line-clamp-1">{program.name}</span>
+                    </h5>
+                    <p className="text-gray-600 mb-1 flex items-center ml-6 text-xs md:text-sm">
+                      <FaClock className="text-primary-500 mr-2 flex-shrink-0" />
+                      {program.time}
+                    </p>
+                    <p className="text-gray-600 flex items-center ml-6 text-xs md:text-sm">
+                      <FaMapPin className="text-primary-500 mr-2 flex-shrink-0" />
+                      <span className="line-clamp-1">{program.location}</span>
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div>
-              <h4 className="text-2xl font-bold text-gray-900 mb-6">
+              <h4 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6">
                 Reach Us
               </h4>
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 <div className="flex items-start">
                   <FaMapMarkerAlt className="text-primary-600 mt-1 mr-3 h-5 w-5 flex-shrink-0" />
-                  <p className="text-gray-600">{address}</p>
+                  <p className="text-gray-600 text-sm md:text-base">
+                    {address}
+                  </p>
                 </div>
 
                 <div className="flex items-center">
                   <FaEnvelope className="text-primary-600 mr-3 h-5 w-5 flex-shrink-0" />
                   <a
                     href={`mailto:${email}`}
-                    className="text-primary-600 hover:underline"
+                    className="text-primary-600 hover:underline text-sm md:text-base break-all"
                   >
                     {email}
                   </a>
@@ -257,7 +261,7 @@ export function ContactSection() {
                   <FaPhone className="text-primary-600 mr-3 h-5 w-5 flex-shrink-0" />
                   <a
                     href={`tel:${phone}`}
-                    className="text-primary-600 hover:underline"
+                    className="text-primary-600 hover:underline text-sm md:text-base"
                   >
                     {phone}
                   </a>

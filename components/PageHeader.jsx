@@ -3,13 +3,15 @@ import { motion } from "framer-motion";
 
 export function PageHeader({ title, subtitle, imageSrc }) {
   return (
-    <div className="relative h-80 overflow-hidden">
+    <div className="relative h-60 sm:h-70 md:h-80 overflow-hidden">
       {/* Background image */}
       <div className="absolute inset-0">
         <Image
           src={imageSrc || "/images/fellowship.jpeg"}
           alt="Header background"
           fill
+          sizes="100vw"
+          priority
           className="object-cover"
         />
         <div className="absolute inset-0 bg-primary-900/70" />
@@ -22,7 +24,7 @@ export function PageHeader({ title, subtitle, imageSrc }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-4xl md:text-5xl font-playfair font-bold text-white mb-4"
+            className="text-3xl sm:text-4xl md:text-5xl font-playfair font-bold text-white mb-2 md:mb-4"
           >
             {title}
           </motion.h1>
@@ -32,7 +34,7 @@ export function PageHeader({ title, subtitle, imageSrc }) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-xl text-blue-100 max-w-2xl"
+              className="text-base sm:text-lg md:text-xl text-blue-100 max-w-2xl line-clamp-3 md:line-clamp-none"
             >
               {subtitle}
             </motion.p>

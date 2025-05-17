@@ -11,15 +11,22 @@ import { BreadcrumbNav } from "../../components/BreadcrumbNav";
 import { PageHeader } from "../../components/PageHeader";
 import Link from "next/link";
 
-// Dynamically import the 3D shirt component to avoid SSR issues
-const ThreeShirt = dynamic(() => import("../../components/ThreeShirt"), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-[500px] flex items-center justify-center bg-gray-50 rounded-xl">
-      <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary-600"></div>
-    </div>
-  ),
-});
+// Dynamically import the 3D shirt component with error boundary to prevent crashes
+const ThreeShirt = dynamic(
+  () =>
+    import("../../components/ThreeShirt").catch((err) => {
+      console.error("Error loading ThreeShirt:", err);
+      return () => <SVGShirt />; // Fallback to SVG on error
+    }),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-[500px] flex items-center justify-center bg-gray-50 rounded-xl">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary-600"></div>
+      </div>
+    ),
+  }
+);
 
 // Import SVG shirt component
 import SVGShirt from "../../components/SVGShirt";
@@ -199,7 +206,8 @@ export default function VotePage() {
 
         {/* Progress Steps */}
         <div className="max-w-4xl mx-auto mb-12">
-          <div className="flex items-center justify-between">
+          {/* Desktop Progress Steps - Hidden on mobile */}
+          <div className="hidden md:flex items-center justify-between">
             {[
               "Select Color",
               "Authenticate",
@@ -230,6 +238,40 @@ export default function VotePage() {
               </div>
             ))}
           </div>
+
+          {/* Mobile Progress Steps - Simplified version */}
+          <div className="md:hidden flex items-center justify-center mb-4">
+            <div className="flex items-center space-x-3">
+              {[1, 2, 3, 4].map((stepNum) => (
+                <div
+                  key={stepNum}
+                  className={`h-3 w-3 rounded-full transition-colors ${
+                    stepNum < step
+                      ? "bg-green-500"
+                      : stepNum === step
+                      ? "bg-primary-600"
+                      : "bg-gray-200"
+                  }`}
+                ></div>
+              ))}
+            </div>
+          </div>
+
+          {/* Current step label for mobile */}
+          <div className="md:hidden text-center mb-4">
+            <span className="text-primary-700 font-medium">
+              Step {step}:{" "}
+              {
+                [
+                  "Select Color",
+                  "Authenticate",
+                  "Vote Details",
+                  "Confirmation",
+                ][step - 1]
+              }
+            </span>
+          </div>
+
           <div className="relative mt-4">
             <div className="absolute top-0 h-1 bg-gray-200 w-full"></div>
             <div
