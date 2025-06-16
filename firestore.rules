@@ -1,0 +1,51 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Allow read access to settings for all users
+    match /settings/{document} {
+      allow read: if true;
+      allow write: if false; // Only allow writes through admin interface
+    }
+    
+    // Members collection - allow users to read/write their own data
+    match /members/{userId} {
+      allow read: if true; // Allow reading for username checking
+      allow write: if request.auth != null || 
+                     (request.auth == null && resource == null); // Allow creation for new users
+    }
+    
+    // Votes collection - allow authenticated users to write, all to read
+    match /votes/{voteId} {
+      allow read: if true;
+      allow write: if request.auth != null || 
+                     request.resource.data.username != null; // Allow guest voting
+    }
+    
+    // Payments collection - allow authenticated users to write, admins to read
+    match /payments/{paymentId} {
+      allow read: if true; // Allow reading for payment verification
+      allow write: if request.auth != null || 
+                     request.resource.data.reference != null; // Allow payment recording
+    }
+    
+    // Failed votes collection - allow writing for error handling
+    match /failedVotes/{failedVoteId} {
+      allow read, write: if true;
+    }
+    
+    // Messages collection - for any messaging features
+    match /messages/{messageId} {
+      allow read: if true;
+      allow write: if request.auth != null ||
+                     (request.resource.data.userId != null && 
+                      request.resource.data.status == 'pending');
+    }
+    
+    // Admin collections - restrict access
+    match /admin/{document=**} {
+      allow read, write: if false; // Handle admin access through backend
+    }
+  }
+}

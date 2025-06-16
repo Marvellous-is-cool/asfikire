@@ -77,6 +77,7 @@ export default function VotePage() {
       "family:",
       family
     );
+    console.log("Vote page: Setting authenticated username to:", username);
     setAuthenticatedUsername(username);
     setAuthenticatedFamily(family || "Guest"); // Store family information
     setStep(3);

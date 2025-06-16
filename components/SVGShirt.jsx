@@ -82,7 +82,7 @@ export default function SVGShirt({
         {/* Display SVG content - Responsive container for mobile */}
         <motion.div
           className="w-full max-w-md mb-4 sm:mb-8 relative"
-          style={{ height: "min(70vh, 600px)" /* Responsive height */ }}
+          style={{ height: "min(70vh, 600px)" }}
           animate={{
             rotateY: rotating ? (view === "front" ? 90 : -90) : 0,
             opacity: rotating ? 0.5 : 1,

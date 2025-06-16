@@ -627,22 +627,42 @@ export default function VotingAuthForm({ selectedColor, onComplete, onBack }) {
     setLoading(true);
 
     try {
+      console.log(
+        `VotingAuthForm: Attempting auto-auth for username: "${username}"`
+      );
+
       // Auto-authenticate by username
       const userData = await autoAuthenticateMember(username);
 
-      // Save the auth data
+      console.log(`VotingAuthForm: Auto-auth returned data:`, userData);
+      console.log(
+        `VotingAuthForm: Input username was: "${username}", returned username: "${userData.username}"`
+      );
+
+      // IMPORTANT: Always use the original input username for consistency
+      // This is the key fix to prevent the username switching issue
+      const usernameToUse = username.toLowerCase(); // Original input username
+
+      // Save the auth data with the original input username
       localStorage.setItem(
         "anglican_auth",
         JSON.stringify({
-          username: userData.username,
+          username: usernameToUse, // Use input username instead of returned one
           uid: userData.uid,
           family: userData.family, // Make sure family is stored
           isTemporary: true,
         })
       );
 
-      onComplete(userData.username, userData.family); // Pass both username and family
+      console.log(
+        `VotingAuthForm: Calling onComplete with username: "${usernameToUse}", family: "${userData.family}"`
+      );
+      onComplete(usernameToUse, userData.family); // Use input username instead of returned one
     } catch (error) {
+      console.log(
+        `VotingAuthForm: Auto-auth failed for "${username}":`,
+        error.message
+      );
       setError(error.message);
     } finally {
       setLoading(false);
